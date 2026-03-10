@@ -29,7 +29,9 @@ namespace DreamScape.Pages
             }
 
             using var db = new AppDbContext();
-            var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+            var user = await db.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Username == username);
 
             string hashToVerify = user?.PasswordHash ?? _dummyHash;
             bool passwordValid = BCrypt.Net.BCrypt.Verify(password, hashToVerify);
@@ -40,12 +42,13 @@ namespace DreamScape.Pages
                 return;
             }
 
-            // TODO: navigate to main dashboard after successful login
+            AppSession.CurrentUser = user;
+            Frame.Navigate(typeof(ShellPage));
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: navigate to registration page
+            Frame.Navigate(typeof(RegisterPage));
         }
 
         private async Task ShowErrorAsync(string message)
@@ -61,3 +64,4 @@ namespace DreamScape.Pages
         }
     }
 }
+
