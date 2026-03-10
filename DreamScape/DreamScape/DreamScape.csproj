@@ -13,6 +13,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Pages\Account\CreateAccount.xaml" />
+    <None Remove="Pages\Account\WelcomePage.xaml" />
     <None Remove="Pages\Services\TradeService.xaml" />
   </ItemGroup>
 
@@ -46,9 +48,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\Admin\" />
-    <Folder Include="Pages\Account\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Pages\Account\CreateAccount.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\Account\WelcomePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Pages\Services\TradeService.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
