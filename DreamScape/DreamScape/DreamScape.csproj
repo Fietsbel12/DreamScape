@@ -13,6 +13,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Pages\Account\LoginPage.xaml" />
+    <None Remove="Pages\Admin\MedewerkerDashboard.xaml" />
     <None Remove="Pages\Services\TradeService.xaml" />
   </ItemGroup>
 
@@ -49,6 +51,12 @@
     <Folder Include="Pages\Account\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Pages\Account\LoginPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\Admin\MedewerkerDashboard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Pages\Services\TradeService.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
