@@ -1,10 +1,19 @@
 using DreamScape.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -12,52 +21,52 @@ using System.Threading.Tasks;
 namespace DreamScape.Pages.Account
 {
     /// <summary>
-    /// Page that allows any user to create a new account.
+    /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class CreateAccount : Page
     {
         public CreateAccount()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
+        private void backButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(WelcomePage));
             Frame.BackStack.Clear();
         }
 
-        private async void CreateAccountButton_Click(object sender, RoutedEventArgs e)
+        private async void OpslaanButton_Click(object sender, RoutedEventArgs e)
         {
             ErrorsTextblock.Text = "";
             SuccessTextblock.Text = "";
 
-            // USERNAME VALIDATIE
-            string username = UsernameTextBox.Text.Trim();
+            // NAAM VALIDATIE
+            string naam = NaamTextBox.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(username))
+            if (string.IsNullOrWhiteSpace(naam))
             {
-                ErrorsTextblock.Text = "Gebruikersnaam is verplicht.";
+                ErrorsTextblock.Text = "Naam is verplicht.";
                 return;
             }
-            if (username.Length > 50)
+            if (naam.Length > 50)
             {
-                ErrorsTextblock.Text = "Ongeldige gebruikersnaam.";
+                ErrorsTextblock.Text = "Ongeldige naam.";
                 return;
             }
-            if (username.Length < 2)
+            if (naam.Length < 2)
             {
-                ErrorsTextblock.Text = "Gebruikersnaam moet minimaal 2 tekens bevatten.";
+                ErrorsTextblock.Text = "Naam moet minimaal 2 tekens bevatten.";
                 return;
             }
-            if (!System.Text.RegularExpressions.Regex.IsMatch(username, @"^[a-zA-Z0-9_]+$"))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(naam, @"^[a-zA-Z0-9_]+$"))
             {
-                ErrorsTextblock.Text = "Gebruikersnaam mag alleen letters, cijfers en underscores bevatten.";
+                ErrorsTextblock.Text = "Naam mag alleen letters, cijfers en underscores bevatten.";
                 return;
             }
 
             // WACHTWOORD VALIDATIE
-            string wachtwoord = PasswordTextBox.Password;
+            string wachtwoord = WachtwoordPasswordBox.Password;
 
             if (string.IsNullOrWhiteSpace(wachtwoord))
             {
@@ -96,25 +105,23 @@ namespace DreamScape.Pages.Account
             // AANGEMAAKT OBJECT NA VALIDATIES
             var user = new User
             {
-                Username = username,
+                Username = naam,
                 PasswordHash = gehashtWachtwoord,
-                RoleId = 1 // Player role
+                RoleId = 1
             };
 
             try
             {
                 using var db = new AppDbContext();
 
-                bool usernameExists = await db.Users.AnyAsync(u => u.Username == username);
-
-                if (usernameExists)
+                if (db.Users.Any(u => u.Username == naam))
                 {
-                    ErrorsTextblock.Text = "Gebruikersnaam is al in gebruik.";
+                    ErrorsTextblock.Text = "Naam is al in gebruik.";
                     return;
                 }
 
                 db.Users.Add(user);
-                await db.SaveChangesAsync();
+                db.SaveChanges();
 
                 SuccessTextblock.Text = "Account succesvol aangemaakt!";
 
