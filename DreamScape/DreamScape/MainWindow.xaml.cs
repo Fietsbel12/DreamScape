@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using DreamScape.Data;
+using DreamScape.Pages.Account;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -33,7 +34,7 @@ namespace DreamScape
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
 
-
+            MainFrame.Navigate(typeof(WelcomePage));
         }
     }
 }
