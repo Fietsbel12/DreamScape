@@ -12,9 +12,6 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Pages\Services\TradeService.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -49,7 +46,7 @@
     <Folder Include="Pages\Account\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\Services\TradeService.xaml">
+    <Page Update="Pages\Services\TradePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

@@ -15,6 +15,6 @@ namespace DreamScape.Data
         public int RoleId { get; set; }
         public Role Role { get; set; }
 
-        public ICollection<Inventory> Inventories { get; set; }
+        public Inventory Inventory { get; set; }
     }
 }

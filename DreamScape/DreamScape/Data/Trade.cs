@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace DreamScape.Data
 {
+    public enum TradeStatus
+    {
+        Pending,
+        Accepted,
+        Declined
+    }
     internal class Trade
     {
         public int TradeId { get; set; }
@@ -16,7 +22,8 @@ namespace DreamScape.Data
         public int ReceiverId { get; set; }
         public User Receiver { get; set; }
 
-        public string Status { get; set; }
+        public TradeStatus Status { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public ICollection<TradeItem> TradeItems { get; set; }
     }

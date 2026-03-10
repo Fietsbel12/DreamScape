@@ -19,6 +19,7 @@ namespace DreamScape.Data
         public int Durability { get; set; }
         public string MagicalProperty { get; set; }
 
-        public ICollection<Inventory> Inventories { get; set; }
+        public ICollection<InventoryItem> InventoryItems { get; set; }
+        public ICollection<TradeItem> TradeItems { get; set; }
     }
 }
