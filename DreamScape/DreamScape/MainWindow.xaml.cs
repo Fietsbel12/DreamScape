@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using DreamScape.Data;
+using DreamScape.Pages.Account;
 using DreamScape.Pages.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -33,12 +34,8 @@ namespace DreamScape
 
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
-        }
 
-        private void tradeButton_Click(object sender, RoutedEventArgs e)
-        {
-            tradeButton.Visibility = Visibility.Collapsed;
-            tradeFrame.Navigate(typeof(TradeService));
+            MainFrame.Navigate(typeof(WelcomePage));
         }
     }
 }
