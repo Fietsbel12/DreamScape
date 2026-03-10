@@ -9,42 +9,114 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Padding="20" RowSpacing="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- Header -->
         <TextBlock Grid.Row="0"
-           Text="Trade Request"
-           FontSize="24"
-           FontWeight="Bold"
-           Foreground="Black"
-           Margin="0,0,0,16"/>
+                   x:Name="WelcomeText"
+                   Text="Dashboard"
+                   FontSize="28"
+                   FontWeight="Bold"
+                   Margin="0,0,0,8"/>
 
-        <ListView Grid.Row="1"
-                  x:Name="TradesListView">
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="localData:Trade">
-                    <StackPanel Orientation="Horizontal" Spacing="20">
-                        <TextBlock Text="{x:Bind Sender.Username}" Width="120" />
-                        <TextBlock Text="Status:" Margin="20,0,0,0"/>
-                        <TextBlock Text="{x:Bind Status}" Width="120"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <!-- Two-column layout: Trades (left) | Inventory (right) -->
+        <Grid Grid.Row="1" ColumnSpacing="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10">
-            <Button x:Name="AcceptButton" 
-                        Content="Accept" 
-                        Click="AcceptButton_Click" 
-                        Background="Black"/>
-            <Button x:Name="DeclineButton" 
-                        Content="Decline" 
-                        Click="DeclineButton_Click" 
-                        Background="Black" />
-        </StackPanel>
+            <!-- Left column: Pending Trades -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="Pending Trades"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,8"/>
+
+                <ListView Grid.Row="1"
+                          x:Name="TradesListView"
+                          SelectionMode="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="localData:Trade">
+                            <Grid Padding="8,6" ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"
+                                           Text="{x:Bind Sender.Username}"
+                                           VerticalAlignment="Center"
+                                           FontSize="14"/>
+                                <Button Grid.Column="1"
+                                        Content="Accept"
+                                        Tag="{x:Bind TradeId}"
+                                        Click="AcceptButton_Click"
+                                        Background="Green"
+                                        Foreground="White"
+                                        Padding="10,4"/>
+                                <Button Grid.Column="2"
+                                        Content="Decline"
+                                        Tag="{x:Bind TradeId}"
+                                        Click="DeclineButton_Click"
+                                        Background="DarkRed"
+                                        Foreground="White"
+                                        Padding="10,4"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Button Grid.Row="2"
+                        Content="Create Trade"
+                        Click="CreateTradeButton_Click"
+                        HorizontalAlignment="Left"
+                        Margin="0,12,0,0"/>
+            </Grid>
+
+            <!-- Right column: My Inventory -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="My Inventory"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,8"/>
+
+                <ListView Grid.Row="1"
+                          x:Name="InventoryListView"
+                          SelectionMode="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="localData:InventoryItem">
+                            <StackPanel Orientation="Horizontal" Spacing="12" Padding="8,6">
+                                <TextBlock Text="{x:Bind Item.Name}"
+                                           Width="160"
+                                           FontSize="14"/>
+                                <TextBlock Text="x"
+                                           FontSize="14"
+                                           Foreground="Gray"/>
+                                <TextBlock Text="{x:Bind Quantity}"
+                                           FontSize="14"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>

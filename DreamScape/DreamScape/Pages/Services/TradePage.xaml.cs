@@ -2,18 +2,9 @@ using DreamScape.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -21,65 +12,104 @@ using Windows.Foundation.Collections;
 namespace DreamScape.Pages.Services
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Dashboard page showing the logged-in player's inventory and pending trades.
     /// </summary>
     public sealed partial class TradeService : Page
     {
+        private int _currentUserId;
+
         public TradeService()
         {
             InitializeComponent();
-
-            int currentUserId = 1;
-            LoadReceivedTrades(currentUserId); // LATER AANPASSEN WNR LOGIN IS GEMAAKT!!! AUB FOR THE LOVE OF GOD
         }
 
-        private void LoadReceivedTrades(int UserId)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            if (e.Parameter is int userId)
+            {
+                _currentUserId = userId;
+                LoadDashboard();
+            }
+            else
+            {
+                Frame.Navigate(typeof(DreamScape.Pages.Account.WelcomePage));
+                Frame.BackStack.Clear();
+            }
+        }
+
+        private void LoadDashboard()
         {
             using var db = new AppDbContext();
-            
+
+            var user = db.Users.FirstOrDefault(u => u.UserId == _currentUserId);
+            if (user != null)
+            {
+                WelcomeText.Text = $"Welcome, {user.Username}!";
+            }
+
+            LoadReceivedTrades();
+            LoadInventory();
+        }
+
+        private void LoadReceivedTrades()
+        {
+            using var db = new AppDbContext();
+
             TradesListView.ItemsSource = db.Trades
                 .Include(t => t.Sender)
-                .Where(t => t.ReceiverId == UserId && t.Status == TradeStatus.Pending)
+                .Where(t => t.ReceiverId == _currentUserId && t.Status == TradeStatus.Pending)
                 .OrderByDescending(t => t.TradeId)
                 .ToList();
         }
 
-        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        private void LoadInventory()
         {
-            var selectedTrade = TradesListView.SelectedItem as Trade;
-
-            if (selectedTrade == null)
-                return;
-
             using var db = new AppDbContext();
 
-            var trade = db.Trades.FirstOrDefault(t => t.TradeId == selectedTrade.TradeId);
-            if (trade != null)
-            {
-                trade.Status = TradeStatus.Accepted;
-                db.SaveChanges();
-            }
+            var inventory = db.Inventories
+                .Include(i => i.InventoryItems)
+                .ThenInclude(ii => ii.Item)
+                .FirstOrDefault(i => i.UserId == _currentUserId);
 
-            LoadReceivedTrades(selectedTrade.ReceiverId);
+            InventoryListView.ItemsSource = inventory?.InventoryItems?.ToList()
+                ?? new List<InventoryItem>();
+        }
+
+        private void AcceptButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is int tradeId)
+            {
+                UpdateTradeStatus(tradeId, TradeStatus.Accepted);
+            }
         }
 
         private void DeclineButton_Click(object sender, RoutedEventArgs e)
         {
-            var selectedTrade = TradesListView.SelectedItem as Trade;
+            if (sender is Button button && button.Tag is int tradeId)
+            {
+                UpdateTradeStatus(tradeId, TradeStatus.Declined);
+            }
+        }
 
-            if (selectedTrade == null)
-                return;
-
+        private void UpdateTradeStatus(int tradeId, TradeStatus status)
+        {
             using var db = new AppDbContext();
 
-            var trade = db.Trades.FirstOrDefault(t => t.TradeId == selectedTrade.TradeId);
+            var trade = db.Trades.FirstOrDefault(t => t.TradeId == tradeId);
             if (trade != null)
             {
-                trade.Status = TradeStatus.Declined;
+                trade.Status = status;
                 db.SaveChanges();
             }
 
-            LoadReceivedTrades(selectedTrade.ReceiverId);
+            LoadReceivedTrades();
+        }
+
+        private void CreateTradeButton_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: Navigate to create trade page
         }
     }
 }

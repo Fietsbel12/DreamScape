@@ -37,7 +37,7 @@ namespace DreamScape.Pages.Account
 
             if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
-                Frame.Navigate(typeof(TradeService));
+                Frame.Navigate(typeof(TradeService), user.UserId);
                 Frame.BackStack.Clear();
             }
             else
