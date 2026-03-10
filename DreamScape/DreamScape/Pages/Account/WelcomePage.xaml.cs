@@ -30,7 +30,8 @@ namespace DreamScape.Pages.Account
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to login page (to be implemented)
+            Frame.Navigate(typeof(LoginPage));
+            Frame.BackStack.Clear();
         }
 
         private void CreateAccountButton_Click(object sender, RoutedEventArgs e)
