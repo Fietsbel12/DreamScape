@@ -30,83 +30,83 @@ namespace DreamScape.Pages.Account
             InitializeComponent();
         }
 
-        private void backButton_Click(object sender, RoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(WelcomePage));
             Frame.BackStack.Clear();
         }
 
-        private async void OpslaanButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             ErrorsTextblock.Text = "";
             SuccessTextblock.Text = "";
 
-            // NAAM VALIDATIE
-            string naam = NaamTextBox.Text.Trim();
+            // USERNAME VALIDATION
+            string username = UsernameTextBox.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(naam))
+            if (string.IsNullOrWhiteSpace(username))
             {
-                ErrorsTextblock.Text = "Naam is verplicht.";
+                ErrorsTextblock.Text = "Username is required.";
                 return;
             }
-            if (naam.Length > 50)
+            if (username.Length > 50)
             {
-                ErrorsTextblock.Text = "Ongeldige naam.";
+                ErrorsTextblock.Text = "Invalid username.";
                 return;
             }
-            if (naam.Length < 2)
+            if (username.Length < 2)
             {
-                ErrorsTextblock.Text = "Naam moet minimaal 2 tekens bevatten.";
+                ErrorsTextblock.Text = "Username must be at least 2 characters.";
                 return;
             }
-            if (!System.Text.RegularExpressions.Regex.IsMatch(naam, @"^[a-zA-Z0-9_]+$"))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(username, @"^[a-zA-Z0-9_]+$"))
             {
-                ErrorsTextblock.Text = "Naam mag alleen letters, cijfers en underscores bevatten.";
-                return;
-            }
-
-            // WACHTWOORD VALIDATIE
-            string wachtwoord = WachtwoordPasswordBox.Password;
-
-            if (string.IsNullOrWhiteSpace(wachtwoord))
-            {
-                ErrorsTextblock.Text = "Wachtwoord is verplicht.";
-                return;
-            }
-            if (wachtwoord.Length > 50)
-            {
-                ErrorsTextblock.Text = "Ongeldig wachtwoord.";
-                return;
-            }
-            if (wachtwoord.Length < 6)
-            {
-                ErrorsTextblock.Text = "Wachtwoord moet minimaal 6 tekens bevatten.";
-                return;
-            }
-            if (!System.Text.RegularExpressions.Regex.IsMatch(wachtwoord, @"[0-9]"))
-            {
-                ErrorsTextblock.Text = "Wachtwoord moet minimaal één cijfer bevatten.";
-                return;
-            }
-            if (!System.Text.RegularExpressions.Regex.IsMatch(wachtwoord, @"[A-Z]"))
-            {
-                ErrorsTextblock.Text = "Wachtwoord moet minimaal één hoofdletter bevatten.";
-                return;
-            }
-            if (!System.Text.RegularExpressions.Regex.IsMatch(wachtwoord, @"[\W_]"))
-            {
-                ErrorsTextblock.Text = "Wachtwoord moet minimaal één speciaal teken bevatten.";
+                ErrorsTextblock.Text = "Username may only contain letters, numbers and underscores.";
                 return;
             }
 
-            // HASH HET WACHTWOORD
-            string gehashtWachtwoord = BCrypt.Net.BCrypt.HashPassword(wachtwoord);
+            // PASSWORD VALIDATION
+            string password = PasswordInput.Password;
 
-            // AANGEMAAKT OBJECT NA VALIDATIES
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                ErrorsTextblock.Text = "Password is required.";
+                return;
+            }
+            if (password.Length > 50)
+            {
+                ErrorsTextblock.Text = "Invalid password.";
+                return;
+            }
+            if (password.Length < 6)
+            {
+                ErrorsTextblock.Text = "Password must be at least 6 characters.";
+                return;
+            }
+            if (!System.Text.RegularExpressions.Regex.IsMatch(password, @"[0-9]"))
+            {
+                ErrorsTextblock.Text = "Password must contain at least one digit.";
+                return;
+            }
+            if (!System.Text.RegularExpressions.Regex.IsMatch(password, @"[A-Z]"))
+            {
+                ErrorsTextblock.Text = "Password must contain at least one uppercase letter.";
+                return;
+            }
+            if (!System.Text.RegularExpressions.Regex.IsMatch(password, @"[\W_]"))
+            {
+                ErrorsTextblock.Text = "Password must contain at least one special character.";
+                return;
+            }
+
+            // HASH THE PASSWORD
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+
+            // CREATE OBJECT AFTER VALIDATIONS
             var user = new User
             {
-                Username = naam,
-                PasswordHash = gehashtWachtwoord,
+                Username = username,
+                PasswordHash = hashedPassword,
                 RoleId = 1
             };
 
@@ -114,16 +114,16 @@ namespace DreamScape.Pages.Account
             {
                 using var db = new AppDbContext();
 
-                if (db.Users.Any(u => u.Username == naam))
+                if (db.Users.Any(u => u.Username == username))
                 {
-                    ErrorsTextblock.Text = "Naam is al in gebruik.";
+                    ErrorsTextblock.Text = "Username is already taken.";
                     return;
                 }
 
                 db.Users.Add(user);
                 db.SaveChanges();
 
-                SuccessTextblock.Text = "Account succesvol aangemaakt!";
+                SuccessTextblock.Text = "Account successfully created!";
 
                 await Task.Delay(1000);
 
@@ -132,7 +132,7 @@ namespace DreamScape.Pages.Account
             }
             catch (Exception ex)
             {
-                ErrorsTextblock.Text = $"Fout bij opslaan: {ex.Message}";
+                ErrorsTextblock.Text = $"Error while saving: {ex.Message}";
             }
         }
     }

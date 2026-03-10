@@ -10,19 +10,19 @@
 
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" Width="320">
-            <TextBlock Text="Account aanmaken" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" />
+            <TextBlock Text="Create Account" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" />
 
-            <TextBlock Text="Gebruikersnaam" />
-            <TextBox x:Name="NaamTextBox" PlaceholderText="Voer je gebruikersnaam in" />
+            <TextBlock Text="Username" />
+            <TextBox x:Name="UsernameTextBox" PlaceholderText="Enter your username" />
 
-            <TextBlock Text="Wachtwoord" />
-            <PasswordBox x:Name="WachtwoordPasswordBox" PlaceholderText="Voer je wachtwoord in" />
+            <TextBlock Text="Password" />
+            <PasswordBox x:Name="PasswordInput" PlaceholderText="Enter your password" />
 
             <TextBlock x:Name="ErrorsTextblock" Foreground="Red" TextWrapping="Wrap" />
             <TextBlock x:Name="SuccessTextblock" Foreground="Green" TextWrapping="Wrap" />
 
-            <Button x:Name="OpslaanButton" Content="Account aanmaken" HorizontalAlignment="Stretch" Click="OpslaanButton_Click" />
-            <Button x:Name="backButton" Content="Terug" HorizontalAlignment="Stretch" Click="backButton_Click" />
+            <Button x:Name="SaveButton" Content="Create Account" HorizontalAlignment="Stretch" Click="SaveButton_Click" />
+            <Button x:Name="BackButton" Content="Back" HorizontalAlignment="Stretch" Click="BackButton_Click" />
         </StackPanel>
     </Grid>
 </Page>
