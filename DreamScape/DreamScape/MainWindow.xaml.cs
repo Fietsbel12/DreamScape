@@ -1,5 +1,5 @@
 using DreamScape.Data;
-using DreamScape.Pages.Account;
+using DreamScape.Pages;
 using Microsoft.UI.Xaml;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -21,7 +21,7 @@ namespace DreamScape
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
 
-            RootFrame.Navigate(typeof(LoginPage));
+            RootFrame.Navigate(typeof(WelcomePage));
         }
     }
 }

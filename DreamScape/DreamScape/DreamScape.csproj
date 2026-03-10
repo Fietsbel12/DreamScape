@@ -16,6 +16,7 @@
     <None Remove="Pages\Account\LoginPage.xaml" />
     <None Remove="Pages\Admin\MedewerkerDashboard.xaml" />
     <None Remove="Pages\Services\TradeService.xaml" />
+    <None Remove="Pages\WelcomePage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,6 +59,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Pages\Services\TradeService.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\WelcomePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
